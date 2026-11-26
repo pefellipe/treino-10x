@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0812">
+<title>Operação 10X · Treino</title>
+<style>
+:root{
+  --bg:#0a0812;--card:rgba(30,22,52,.62);--card-open:rgba(36,26,62,.82);
+  --border:rgba(140,110,220,.2);--border-strong:rgba(167,139,250,.48);
+  --violet:#8b5cf6;--violet-bright:#b49aff;--coral:#f97362;
+  --ink:#ece8f5;--muted:#9a92b4;--muted2:#726a8c;--ok:#34d399;
+  --blue:#60a5fa;--font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh}
+.glow{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none}
+.glow.a{width:480px;height:480px;background:#6d28d9;top:-220px;left:-200px;opacity:.3}
+.glow.b{width:400px;height:400px;background:#c2410c;bottom:-140px;right:-200px;opacity:.13}
+.wrap{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:30px 16px 48px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:5px}
+h1{font:700 clamp(27px,7vw,35px)/1.05 var(--font-display);letter-spacing:-.7px;margin:0}
+h1 .g{background:linear-gradient(100deg,var(--violet-bright),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{font-size:12px;color:var(--muted);margin-top:7px}
+.pill{border:1px solid var(--border);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:11px;white-space:nowrap}
+.day-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-tabs button{font:700 12px var(--font-display);color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:10px;min-height:44px;cursor:pointer}
+.day-tabs button[aria-pressed=true]{color:var(--ink);border-color:var(--violet-bright);background:linear-gradient(135deg,rgba(139,92,246,.34),rgba(249,115,98,.14))}
+.week-info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.wi{background:var(--bg);padding:11px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.wi span{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);font-weight:700}
+.wi strong{font:700 17px var(--font-display);font-variant-numeric:tabular-nums}
+.wi em{font-style:normal;font-size:10px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;overflow:hidden}
+.card-head{padding:17px 17px 13px;border-bottom:1px solid rgba(140,110,220,.12)}
+.kicker{color:var(--coral);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.day-title{font:700 23px/1.15 var(--font-display);margin:4px 0}
+.day-desc{color:var(--muted);font-size:13px}
+.section{padding:13px 16px 5px}
+.section-title{font:700 12px var(--font-display);letter-spacing:1px;text-transform:uppercase;color:var(--violet-bright);margin:0 0 5px}
+.item-list{list-style:none;margin:0;padding:0 9px 9px}
+.item{border-top:1px solid rgba(140,110,220,.1)}
+.item label{display:flex;align-items:flex-start;gap:11px;padding:13px 7px;border-radius:9px;cursor:pointer}
+.item label:active{background:rgba(139,92,246,.1)}
+.item input{position:absolute;opacity:0;width:1px;height:1px}
+.check{width:25px;height:25px;flex:none;margin-top:1px;border-radius:8px;border:2px solid var(--muted2);display:grid;place-items:center;transition:.15s}
+.check svg{width:15px;height:15px;opacity:0;transform:scale(.6);transition:.15s}
+.item input:checked+.check{background:var(--ok);border-color:var(--ok)}
+.item input:checked+.check svg{opacity:1;transform:scale(1)}
+.item-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.item-name{font-size:14px;font-weight:650}
+.item-note{font-size:12px;color:var(--muted);line-height:1.4}
+.item input:checked~.item-body .item-name{text-decoration:line-through;color:var(--muted2)}
+.item input:checked~.item-body .item-note{opacity:.5}
+.dose{flex:none;text-align:right;font:700 14px var(--font-display);color:var(--violet-bright);white-space:nowrap;padding-top:2px}
+.dose small{display:block;color:var(--muted2);font:500 10px var(--font-body)}
+.notice{margin:0 15px 15px;padding:11px 12px;border:1px solid rgba(96,165,250,.25);background:rgba(96,165,250,.07);border-radius:10px;color:#c8dcff;font-size:12px}
+.notice.warn{border-color:rgba(249,115,98,.3);background:rgba(249,115,98,.07);color:#ffc4b9}
+.progress-wrap{padding:13px 16px 15px;display:flex;flex-direction:column;gap:7px}
+.progress-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.track{height:6px;background:rgba(140,110,220,.16);border-radius:99px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--ok));border-radius:99px;transition:width .2s}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.small-note{font-size:11px;color:var(--muted2)}
+.reset{font:600 12px var(--font-body);color:var(--muted);background:none;border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer}
+.reset.armed{color:var(--coral);border-color:rgba(249,115,98,.5)}
+@media(min-width:560px){.wrap{padding-top:42px}.day-tabs{gap:8px}.day-tabs button{min-height:48px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="glow a"></div><div class="glow b"></div>
+<main class="wrap">
+<header>
+  <div><div class="eyebrow">Plano semanal · ciclo inicial de 30 dias</div><h1>Operação <span class="g">10X</span></h1><div class="subtitle">Força · cardio · mobilidade · consistência</div></div>
+  <div class="pill">2 × 12 kg + spinning</div>
+</header>
+<nav class="day-tabs" id="dayTabs" aria-label="Selecionar dia da semana"></nav>
+<div class="week-info" id="weekInfo"></div>
+<section class="card" id="dayCard" aria-live="polite"></section>
+<div class="footer"><span class="small-note">O progresso é salvo neste navegador.</span><button class="reset" id="resetBtn" type="button">Limpar dia</button></div>
+</main>
+<script>
+const DAYS = [
+ {id:"seg",tab:"SEG",name:"Segunda-feira",title:"Força A",desc:"Corpo inteiro · ênfase em agachamento, empurrar e core",tag:"TREINO DE FORÇA",sections:[
+  {title:"Aquecimento",items:[{id:"warm",name:"Aquecimento geral",dose:"5 min",note:"Movimentos leves e ensaio dos padrões do treino."}]},
+  {title:"Musculação",items:[
+   {id:"squat",name:"Goblet squat até uma cadeira",dose:"2–3 × 8–12",note:"Um kettlebell junto ao peito. Amplitude confortável, sem dor ou instabilidade no joelho."},
+   {id:"press",name:"Kettlebell floor press",dose:"2–3 × 10–15",note:"Deitado no chão, empurre os kettlebells para cima. Controle a descida."},
+   {id:"row",name:"Remada unilateral",dose:"2–3 × 10–15/lado",note:"Apoie a mão livre em uma superfície firme e estável."},
+   {id:"bridge",name:"Glute bridge",dose:"2–3 × 12–15",note:"Contraia os glúteos no topo sem hiperestender a lombar."},
+   {id:"deadbug",name:"Dead bug",dose:"2 × 8–12/lado",note:"Mantenha o tronco estável e mova devagar."}
+  ]},
+  {title:"Cardio e mobilidade",items:[
+   {id:"cardio",name:"Cardio leve",dose:"15–20 min",note:"Somente modalidade sem dor ou formigamento. Não pedale através da dormência."},
+   {id:"mob",name:"Mobilidade breve",dose:"5–10 min",note:"Cat-cow, wall slides e hip hinge drill, em amplitude confortável."}
+  ]}],
+  notice:"Se o joelho doer, falsear ou ficar instável, interrompa o exercício e reavalie a variação. Não force amplitude."
+ },
+ {id:"ter",tab:"TER",name:"Terça-feira",title:"Cardio + mobilidade",desc:"Condicionamento confortável e sessão dedicada de flexibilidade",tag:"RECUPERAÇÃO ATIVA",sections:[
+  {title:"Cardio",items:[{id:"cardio",name:"Aeróbico confortável",dose:"25–35 min",note:"Bike apenas se o ajuste estiver confortável e não houver formigamento. Caso contrário, caminhada confortável ou outra atividade tolerada."}]},
+  {title:"Mobilidade e flexibilidade",items:[
+   {id:"ham",name:"Alongamento de posteriores deitado",dose:"2 × 30 s/lado",note:"Use toalha ou faixa. Alongamento suave, sem puxar até sentir dor."},
+   {id:"calf",name:"Alongamento de panturrilhas na parede",dose:"2 × 30 s/lado",note:"Calcanhar apoiado e amplitude confortável."},
+   {id:"hip",name:"Mobilidade de quadril",dose:"2 × 8",note:"Movimentos controlados e sem forçar o joelho."},
+   {id:"thor",name:"Rotação torácica deitado de lado",dose:"2 × 8/lado",note:"Gire o tronco dentro da amplitude confortável."},
+   {id:"wall",name:"Wall slides",dose:"2 × 10",note:"Deslize os braços na parede sem forçar a rotação dos ombros."},
+   {id:"external",name:"Rotação externa de ombro sem carga",dose:"2 × 10",note:"Cotovelos próximos ao corpo; movimento curto e controlado."},
+   {id:"chest",name:"Alongamento de peitoral na parede",dose:"2 × 30 s/lado",note:"Sem pinçamento ou dor na articulação."},
+   {id:"breath",name:"Respiração diafragmática",dose:"2 min",note:"Respiração tranquila, sem prender o ar."}
+  ]}],
+  notice:"A sessão de mobilidade deve ser confortável. Pare se houver dor, formigamento ou sensação de pinçamento no ombro."
+ },
+ {id:"qua",tab:"QUA",name:"Quarta-feira",title:"Força B",desc:"Corpo inteiro · ênfase em cadeia posterior e puxar",tag:"TREINO DE FORÇA",sections:[
+  {title:"Aquecimento",items:[{id:"warm",name:"Aquecimento geral",dose:"5 min",note:"Movimentos leves e ensaio dos padrões do treino."}]},
+  {title:"Musculação",items:[
+   {id:"rdl",name:"Kettlebell Romanian deadlift",dose:"3 × 10–12",note:"Desça até onde mantém controle da coluna e do quadril, sem buscar amplitude máxima."},
+   {id:"push",name:"Flexão inclinada",dose:"2–3 × 8–15",note:"Use superfície firme e estável. Ajuste a inclinação para uma dificuldade adequada."},
+   {id:"row",name:"Remada unilateral",dose:"3 × 10–15/lado",note:"Controle a escápula e evite girar o tronco."},
+   {id:"deadlift",name:"Kettlebell deadlift",dose:"2 × 10–12",note:"Comece com os kettlebells em posição confortável e mantenha a técnica."},
+   {id:"birddog",name:"Bird dog",dose:"2 × 8–10/lado",note:"Estenda braço e perna opostos sem girar a pelve."}
+  ]},
+  {title:"Cardio e mobilidade",items:[
+   {id:"cardio",name:"Cardio leve",dose:"15–20 min",note:"Somente modalidade sem dor ou formigamento. Não pedale através da dormência."},
+   {id:"mob",name:"Mobilidade breve",dose:"5–10 min",note:"Cat-cow, wall slides e hip hinge drill, em amplitude confortável."}
+  ]}],
+  notice:"No Romanian deadlift, a sensação de alongamento deve ser controlada. Interrompa se houver dor aguda, irradiação ou formigamento."
+ },
+ {id:"qui",tab:"QUI",name:"Quinta-feira",title:"Cardio + mobilidade",desc:"Condicionamento confortável e segunda sessão dedicada",tag:"RECUPERAÇÃO ATIVA",sections:[
+  {title:"Cardio",items:[{id:"cardio",name:"Aeróbico confortável",dose:"30–40 min",note:"Bike apenas se o ajuste estiver confortável e não houver formigamento. Caso contrário, caminhada confortável ou outra atividade tolerada."}]},
+  {title:"Mobilidade e flexibilidade",items:[
+   {id:"ham",name:"Alongamento de posteriores deitado",dose:"2 × 30 s/lado",note:"Use toalha ou faixa. Alongamento suave, sem puxar até sentir dor."},
+   {id:"calf",name:"Alongamento de panturrilhas na parede",dose:"2 × 30 s/lado",note:"Calcanhar apoiado e amplitude confortável."},
+   {id:"hip",name:"Mobilidade de quadril",dose:"2 × 8",note:"Movimentos controlados e sem forçar o joelho."},
+   {id:"thor",name:"Rotação torácica deitado de lado",dose:"2 × 8/lado",note:"Gire o tronco dentro da amplitude confortável."},
+   {id:"wall",name:"Wall slides",dose:"2 × 10",note:"Deslize os braços na parede sem forçar a rotação dos ombros."},
+   {id:"external",name:"Rotação externa de ombro sem carga",dose:"2 × 10",note:"Cotovelos próximos ao corpo; movimento curto e controlado."},
+   {id:"chest",name:"Alongamento de peitoral na parede",dose:"2 × 30 s/lado",note:"Sem pinçamento ou dor na articulação."},
+   {id:"breath",name:"Respiração diafragmática",dose:"2 min",note:"Respiração tranquila, sem prender o ar."}
+  ]}],
+  notice:"Não force amplitudes. A meta é melhorar gradualmente o conforto e o controle, não alcançar uma posição específica."
+ },
+ {id:"sex",tab:"SEX",name:"Sexta-feira",title:"Força C",desc:"Corpo inteiro · estímulo complementar e estabilidade",tag:"TREINO DE FORÇA",sections:[
+  {title:"Aquecimento",items:[{id:"warm",name:"Aquecimento geral",dose:"5 min",note:"Movimentos leves e ensaio dos padrões do treino."}]},
+  {title:"Musculação",items:[
+   {id:"sumo",name:"Kettlebell sumo deadlift",dose:"3 × 10–12",note:"Amplitude confortável; observe o alinhamento e a resposta do joelho."},
+   {id:"press",name:"Floor press unilateral",dose:"2–3 × 10–12/lado",note:"Um lado de cada vez, mantendo o tronco estável."},
+   {id:"row",name:"Remada com dois kettlebells",dose:"2–3 × 10–12",note:"Use somente se conseguir manter a postura e controlar a carga."},
+   {id:"calf",name:"Elevação de panturrilhas",dose:"3 × 12–20",note:"Use apoio para equilíbrio e faça o movimento controlado."},
+   {id:"carry",name:"Suitcase carry",dose:"2 × 30–45 s/lado",note:"Caminhe com um kettlebell de um lado, sem inclinar o tronco."}
+  ]},
+  {title:"Cardio e mobilidade",items:[
+   {id:"cardio",name:"Cardio leve",dose:"15–20 min",note:"Somente modalidade sem dor ou formigamento. Não pedale através da dormência."},
+   {id:"mob",name:"Mobilidade breve",dose:"5–10 min",note:"Cat-cow, wall slides e hip hinge drill, em amplitude confortável."}
+  ]}],
+  notice:"No suitcase carry, use um espaço livre e seguro. Se a pegada ou postura se perder, encerre a série."
+ },
+ {id:"sab",tab:"SÁB",name:"Sábado",title:"Movimento livre",desc:"Atividade leve e recuperação sem cobrança",tag:"ATIVIDADE OPCIONAL",sections:[
+  {title:"Atividade aeróbica",items:[{id:"move",name:"Caminhada ou atividade leve",dose:"20–40 min",note:"Escolha uma atividade confortável. Bike somente se não houver pressão desconfortável ou formigamento."}]},
+  {title:"Mobilidade",items:[{id:"mob",name:"Mobilidade leve",dose:"5–10 min",note:"Escolha movimentos confortáveis para quadril, posteriores, coluna torácica e ombros."}]}
+ ],notice:"Este é um dia flexível. Se estiver cansado, descanso também é uma escolha válida."},
+ {id:"dom",tab:"DOM",name:"Domingo",title:"Recuperação",desc:"Descanso e preparação para a próxima semana",tag:"DESCANSO",sections:[
+  {title:"Opcional",items:[{id:"walk",name:"Movimento leve",dose:"Opcional",note:"Uma caminhada tranquila ou alguns minutos de mobilidade, somente se fizer bem."},{id:"review",name:"Revisar a semana",dose:"3–5 min",note:"Observe consistência, dificuldades, desconfortos e o que deseja ajustar."}]}
+ ],notice:"Não há treino obrigatório hoje. Priorize recuperação, sono e preparação para a próxima semana."}
+];
+const KEY="operacao-10x-tracker-v1";
+let state={day:"seg",done:{}};
+try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved)state={...state,...saved}}catch(e){}
+const checkSvg='<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="#0a0812" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const key=(day,section,item)=>`${day}:${section}:${item}`;
+function allItems(day){return day.sections.flatMap((s,si)=>s.items.map((it,ii)=>key(day.id,si,it.id)))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function renderTabs(){
+ const root=document.getElementById("dayTabs");
+ root.innerHTML=DAYS.map(d=>`<button type="button" data-day="${d.id}" aria-pressed="${d.id===state.day}">${d.tab}</button>`).join("");
+ root.querySelectorAll("button").forEach(b=>b.onclick=()=>{state.day=b.dataset.day;save();render()});
+}
+function render(){
+ const day=DAYS.find(d=>d.id===state.day)||DAYS[0];
+ renderTabs();
+ const keys=allItems(day),count=keys.filter(k=>state.done[k]).length;
+ const totalWeek=DAYS.flatMap(allItems),weekDone=totalWeek.filter(k=>state.done[k]).length;
+ document.getElementById("weekInfo").innerHTML=`
+ <div class="wi"><span>Dia selecionado</span><strong>${count}/${keys.length}</strong><em>tarefas concluídas</em></div>
+ <div class="wi"><span>Semana</span><strong>${weekDone}/${totalWeek.length}</strong><em>itens marcados</em></div>
+ <div class="wi"><span>Foco</span><strong>${day.id==="seg"||day.id==="qua"||day.id==="sex"?"Força":day.id==="dom"?"Pausa":"Leve"}</strong><em>plano do dia</em></div>`;
+ let html=`<div class="card-head"><div class="kicker">${day.tag}</div><div class="day-title">${day.title}</div><div class="day-desc">${day.name} · ${day.desc}</div></div>`;
+ day.sections.forEach((s,si)=>{
+   html+=`<div class="section"><h2 class="section-title">${s.title}</h2></div><ul class="item-list">`;
+   s.items.forEach(it=>{
+     const k=key(day.id,si,it.id),checked=!!state.done[k],id=`cb-${k.replace(/[^a-z0-9]/gi,"-")}`;
+     html+=`<li class="item"><label for="${id}"><input type="checkbox" id="${id}" data-key="${k}" ${checked?"checked":""}><span class="check">${checkSvg}</span><span class="item-body"><span class="item-name">${it.name}</span><span class="item-note">${it.note||""}</span></span><span class="dose">${it.dose||""}</span></label></li>`;
+   });
+   html+="</ul>";
+ });
+ if(day.notice)html+=`<div class="notice ${day.id==="seg"||day.id==="qua"?"warn":""}">${day.notice}</div>`;
+ html+=`<div class="progress-wrap"><div class="progress-top"><span>Progresso do dia</span><strong>${count} de ${keys.length}</strong></div><div class="track"><div class="bar" style="width:${keys.length?count/keys.length*100:0}%"></div></div></div>`;
+ const card=document.getElementById("dayCard");card.innerHTML=html;
+ card.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.onchange=()=>{if(cb.checked)state.done[cb.dataset.key]=true;else delete state.done[cb.dataset.key];save();render()});
+}
+let armed=false,timer;
+const reset=document.getElementById("resetBtn");
+reset.onclick=()=>{
+ if(!armed){armed=true;reset.textContent="Toque novamente para limpar";reset.classList.add("armed");timer=setTimeout(disarm,3000);return}
+ clearTimeout(timer);
+ const day=DAYS.find(d=>d.id===state.day);
+ allItems(day).forEach(k=>delete state.done[k]);
+ disarm();save();render();
+};
+function disarm(){armed=false;reset.textContent="Limpar dia";reset.classList.remove("armed")}
+render();
+</script>
+</body>
+</html>
